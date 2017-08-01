@@ -1,0 +1,56 @@
+/*********************************************************************************/
+/* Header                                                                        */
+/*********************************************************************************/
+
+#header
+{
+    position: relative;
+    background: url(../images/header_2.jpeg) no-repeat bottom center;
+    background-attachment: fixed;
+    background-size: cover;
+    text-align: center;
+}
+
+#header:before
+{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(64,64,64,0.125);
+}
+
+/*********************************************************************************/
+/* Logo                                                                          */
+/*********************************************************************************/
+
+#logo
+{
+    position: relative;
+    z-index: 1;
+}
+
+#logo h1
+{
+    color: #FFF;
+}
+
+#logo a
+{
+    display: block;
+    text-decoration: none;
+    font-weight: 300;
+    line-height: 1em;
+    font-size: 7em;
+    color: #FFF;
+    letter-spacing: -0.05em;
+    margin: 0 0 0.125em 0;
+}
+
+#logo span
+{
+    font-size: 1.4em;
+    color: #FFF;
+}
