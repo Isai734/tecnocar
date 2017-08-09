@@ -13,7 +13,7 @@ class servicio
     {
         $payload = file_get_contents('php://input');
         $payload = json_decode($payload);
-        return self::createAuto($payload);
+        return self::createServicio($payload);
     }
 
     public static function get($request)
@@ -27,7 +27,7 @@ class servicio
         if (isset($request[0])) {
             $payload = file_get_contents('php://input');
             $payload = json_decode($payload);
-            return self::createAuto($payload);
+            return self::createServicio($payload);
         } else {
             throw new ExcepcionApi(
                 Constantes::ESTADO_MALA_SINTAXIS,
@@ -38,41 +38,34 @@ class servicio
     public static function delete($request)
     {
         if (!empty($request[0])) {
-            self::deleteAuto($request[0]);
+            self::deleteServicio($request[0]);
         } else {
             throw new ExcepcionApi(Constantes::ESTADO_MALA_SINTAXIS, "Falta id", 422);
         }
         //return self::getPersonas(isset($request[0]) ? $request[0] : null);
     }
 
-    public static function createAuto($auto = null)
+    public static function createServicio($servicio = null)
     {
-        if ($auto) {
+        if ($servicio) {
             try {
                 $pdo = ConexionBD::obtenerInstancia()->obtenerBD();
                 // Sentencia INSERT
                 $comando = 'INSERT INTO ' . self::NOMBRE_TABLA . '('
-                    . self::PLACA . ','
-                    . self::MARCA . ','
-                    . self::MODELO . ','
-                    . self::COLOR . ','
-                    . self::ANIO . ','
-                    . self::TRANSMISION . ','
-                    . self::CLIENTE_CLAVE . ') VALUES(?,?,?,?,?,?,?)';
+                    . self::CLAVE . ','
+                    . self::NOMBRE . ','
+                    . self::COSTO . ','
+                    . self::TIPO. ') VALUES(?,?,?,?)';
                 // Preparar la sentencia
                 $sentencia = $pdo->prepare($comando);
                 // Generar Pk
-                $sentencia->bindParam(1, $auto->placa);
-                $sentencia->bindParam(2, $auto->marca);
-                $sentencia->bindParam(3, $auto->modelo);
-                $sentencia->bindParam(4, $auto->color);
-                $sentencia->bindParam(5, $auto->anio);
-                $sentencia->bindParam(6, $auto->transmision);
-                $sentencia->bindParam(7, $auto->cliente_clave);
+                $sentencia->bindParam(1, $servicio->clave);
+                $sentencia->bindParam(2, $servicio->nombre);
+                $sentencia->bindParam(3, $servicio->costo);
+                $sentencia->bindParam(4, $servicio->tipo);
                 // Retornar en el ultimo id insertado
                 if ($sentencia->execute()) {
                     http_response_code(201);
-                    $respuesta[self::PLACA] = $auto->placa;
                     $respuesta['estado'] = Constantes::CODIGO_EXITO;
                     $respuesta['mensaje'] = utf8_encode("Registro creado con Exito¡¡");
                     return $respuesta;
@@ -87,34 +80,28 @@ class servicio
         }
     }
 
-    public static function updateAuto($auto)
+    public static function updateServicio($servicio)
     {
-        if ($auto) {
+        if ($servicio) {
             try {
                 $pdo = ConexionBD::obtenerInstancia()->obtenerBD();
                 // Sentencia Update placa, marca, modelo, color, anio, transmision, cliente_clave
                 $comando = 'UPDATE ' . self::NOMBRE_TABLA . ' SET '
-                    . self::MARCA . '=?,'
-                    . self::MODELO . '=?,'
-                    . self::COLOR . '=?,'
-                    . self::ANIO . '=?,'
-                    . self::TRANSMISION . '=?,'
-                    . self::CLIENTE_CLAVE . '=? WHERE ' . self::PLACA . " =?";
+                    . self::NOMBRE . '=?,'
+                    . self::COSTO . '=?,'
+                    . self::TIPO . '=? WHERE ' . self::CLAVE . " =?";
                 // Preparar la sentencia
                 $sentencia = $pdo->prepare($comando);
                 // Generar Pk
-                $sentencia->bindParam(7, $auto->placa);
-                $sentencia->bindParam(1, $auto->marca);
-                $sentencia->bindParam(2, $auto->modelo);
-                $sentencia->bindParam(3, $auto->color);
-                $sentencia->bindParam(4, $auto->anio);
-                $sentencia->bindParam(5, $auto->transmision);
-                $sentencia->bindParam(6, $auto->cliente_clave);
+                $sentencia->bindParam(4, $servicio->clave);
+                $sentencia->bindParam(1, $servicio->nombre);
+                $sentencia->bindParam(2, $servicio->costo);
+                $sentencia->bindParam(3, $servicio->tipo);
+
                 // Retornar en el último id insertado
 
                 if ($sentencia->execute()) {
                     http_response_code(201);
-                    $respuesta[self::PLACA] = $auto->placa;
                     $respuesta['estado'] = Constantes::CODIGO_EXITO;
                     $respuesta['mensaje'] = utf8_encode("Registro actualizado con Exito¡¡");
                     return $respuesta;
@@ -180,6 +167,31 @@ class servicio
         }
     }
 
+public static function getServiciosPlaca($orden = null)
+    {
+        try {
+
+            $comando = "select * from servicio, orden_servicio 
+                where servicio.clave=orden_servicio.servicio_clave and orden_servicio.numero_orden=?";
+            // Preparar sentencia
+            $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+            // Ligar idUsuario
+            $sentencia->bindParam(1, $orden);
+            // Ejecutar sentencia preparada
+            if ($sentencia->execute()) {
+                http_response_code(200);
+                $respuesta[self::NOMBRE_TABLA] = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+                $respuesta['estado'] = Constantes::CODIGO_EXITO;
+                $respuesta['mensaje'] = utf8_encode("Recursos Obtenidos");
+                return $respuesta;
+            } else
+                throw new ExcepcionApi(Constantes::ESTADO_ERROR, "Se ha producido un error");
+
+        } catch (PDOException $e) {
+            throw new ExcepcionApi(Constantes::ESTADO_ERROR_BD, $e->getMessage());
+        }
+    }
+
 
     public static function getServicios($clave = null)
     {
@@ -210,12 +222,12 @@ class servicio
         }
     }
 
-    public static function deleteAuto($placa)
+    public static function deleteServicio($placa)
     {
         try {
             // Sentencia DELETE
             $comando = "DELETE FROM " . self::NOMBRE_TABLA .
-                " WHERE " . self::PLACA . "=?";
+                " WHERE " . self::CLAVE . "=?";
             // Preparar la sentencia
             $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
             $sentencia->bindParam(1, $placa);

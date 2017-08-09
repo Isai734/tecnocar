@@ -127,7 +127,7 @@ include '../../utilidades/ExcepcionApi.php';
                             <td>' . $nombre . '</td>';
 
                 echo '		<td><a href="UpdateProductos.php?id=' . $res[producto::CLAVE] . '&clave=' . $res[producto::PROVEEDOR_CLAVE] . '" data-toggle="tooltip" data-placement="top" title="Modificar"><button class="btn btn-warning"> <span class="glyphicon glyphicon-pencil"></span></button></a></td>
-			        		<td><a data-toggle="tooltip" data-placement="top" title="Eliminar"><button onclick="eliminar()" id="del" value="' . $res[producto::CLAVE] . '" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
+			        		<td><a data-toggle="tooltip" data-placement="top" title="Eliminar"><button onclick="eliminar(' . $res[producto::CLAVE] . ')" id="del" value="' . $res[producto::CLAVE] . '" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
 			    		</tr>';
             }
             ?>
@@ -295,11 +295,11 @@ include '../../utilidades/ExcepcionApi.php';
     });
 
 
-    function eliminar() {
+    function eliminar(id) {
         //alert("hola");
         var ids=document.getElementById("del").value;
         swal({
-                title: "Esta seguro que desea eliminar el registro?",
+                title: "Esta seguro que desea eliminar el registro con clave "+id+" ?",
                 text: "",
                 type: "warning",
                 showCancelButton: true,
@@ -311,7 +311,7 @@ include '../../utilidades/ExcepcionApi.php';
             },
             function(isConfirm) {
                 if (isConfirm) {
-                    window.location = "CrudAlert.php?id="+ids+"&metodo=delete";
+                    window.location = "CrudAlert.php?id="+id+"&metodo=delete";
                 } else {
 
                 }

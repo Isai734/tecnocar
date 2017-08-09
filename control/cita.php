@@ -30,8 +30,7 @@ class cita
         return self::getCitaCliente(isset($request[0]) ? $request[0] : null);
     }
 
-    public static function put($request)
-    {
+    public static function put($request){
         if (isset($request[0])) {
             $payload = file_get_contents('php://input');
             $payload = json_decode($payload);

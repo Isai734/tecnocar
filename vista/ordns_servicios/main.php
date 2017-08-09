@@ -151,6 +151,12 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li>
+                        <a href="../servicios/QueryServicio.php">
+                            <span class="glyphicon glyphicon-check"></span> Servicios
+                        </a>
+                    </li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">

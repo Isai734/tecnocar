@@ -49,8 +49,13 @@ include '../../utilidades/ExcepcionApi.php';
         })(document);
     </script>
 
-
+    <script src="../../vista/style/js/validaciones.js"></script>
+    <script src="../../vista/style/sweet/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../vista/style/sweet/sweetalert.css">
+    <!-- Scripts y styleshet-->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,700,500,900' rel='stylesheet' type='text/css'>
 </head>
+
 
 <body>
 
@@ -111,7 +116,7 @@ include '../../utilidades/ExcepcionApi.php';
 			    			<td>' . $res[empresa::RFC] . '</td>';
 
                 echo '		<td><a href="UpdateEmpresa.php?id=' . $res[empresa::CLAVE] . '&clave=' . $res[empresa::CLAVE] . '" data-toggle="tooltip" data-placement="top" title="Modificar"><button class="btn btn-warning"> <span class="glyphicon glyphicon-pencil"></span></button></a></td>
-			        		<td><a href="CrudAlert.php?id=' . $res[empresa::CLAVE] . '&metodo=delete' . '" data-toggle="tooltip" data-placement="top" title="Eliminar"><button class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
+			        		<td><a data-toggle="tooltip" data-placement="top" title="Eliminar"><button onclick="eliminar(' . $res[empresa::CLAVE] . ')" id="del" value="' . $res[empresa::CLAVE] . '" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
 			    		</tr>';
             }
             ?>
@@ -180,6 +185,30 @@ include '../../utilidades/ExcepcionApi.php';
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    function eliminar(id) {
+        //alert("hola");
+        var ids=document.getElementById("del").value;
+        var tableReg = document.getElementById('tabla');
+        swal({
+                title: "Esta seguro que desea eliminar el registro con clave "+id+" ?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Aceptar!",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    window.location = "CrudAlert.php?id="+id+"&metodo=delete";
+                } else {
+
+                }
+            });
+    }
 </script>
 
 </body>

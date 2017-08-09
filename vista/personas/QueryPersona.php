@@ -50,7 +50,12 @@ echo $tipo;
         })(document);
     </script>
 
-
+    <!-- script -->
+    <script src="../../vista/style/js/validaciones.js"></script>
+    <script src="../../vista/style/sweet/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../vista/style/sweet/sweetalert.css">
+    <!-- Scripts y styleshet-->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,700,500,900' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
@@ -117,7 +122,7 @@ echo $tipo;
                     echo '  <td>' . $res[persona::EMAIL] . '</td>
 			    			<td>' . $res[persona::RFC] . '</td>';
                     echo '		<td><a href="UpdatePersona.php?id=' . $res[persona::ID_PERSONA] . '&tipo=' . $tipo . '" data-toggle="tooltip" data-placement="top" title="Modificar"><button class="btn btn-warning"> <span class="glyphicon glyphicon-pencil"></span></button></a></td>
-			        		<td><a href="CrudAlert.php?id=' . $res[persona::ID_PERSONA] . '&metodo=delete' . '&tipo=' . $tipo . '" data-toggle="tooltip" data-placement="top" title="Eliminar"><button class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
+			        		<td><a data-toggle="tooltip" data-placement="top" title="Eliminar"><button onclick="eliminar(' . $res[persona::ID_PERSONA] . ", 'CLIENTE'". ')" id="del" value="' . $res[persona::ID_PERSONA] . '" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
 			        		<td><a href="../autos/AddAuto.php?id=' . $res[persona::ID_PERSONA] . '" data-toggle="tooltip" data-placement="top" title="Nuevo Auto"><button class="btn btn-primary"> <span class="glyphicon glyphicon-bed"></span></button></a></td>
 			    		</tr>';
                 }
@@ -125,9 +130,8 @@ echo $tipo;
                     echo '  <td>' . $res[persona::ESPECIALIDAD] . '</td>
 			    			<td>' . $res[persona::STATUS] . '</td>';
                     echo '		<td><a href="UpdatePersona.php?id=' . $res[persona::ID_PERSONA] . '&tipo=' . $tipo . '" data-toggle="tooltip" data-placement="top" title="Modificar"><button class="btn btn-warning"> <span class="glyphicon glyphicon-pencil"></span></button></a></td>
-			        		<td><a href="CrudAlert.php?id=' . $res[persona::ID_PERSONA] . '&metodo=delete' . '&tipo=' . $tipo . '" data-toggle="tooltip" data-placement="top" title="Eliminar"><button class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
+			        		<td><a data-toggle="tooltip" data-placement="top" title="Eliminar"><button onclick="eliminar(' . $res[persona::ID_PERSONA] . ", 'MECANICO'".')" id="del" value="' . $res[persona::ID_PERSONA] . '" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
 			    		</tr>';
-
                 }
 
             }
@@ -146,6 +150,29 @@ echo $tipo;
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    function eliminar(id,tipo) {
+        //alert("hola");
+
+        swal({
+                title: "Esta seguro que desea eliminar el registro con clave "+id+" ?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Aceptar!",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    window.location = "CrudAlert.php?id="+id+"&metodo=delete&tipo="+tipo;
+                } else {
+
+                }
+            });
+    }
 </script>
 
 </body>

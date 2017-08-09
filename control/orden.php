@@ -95,6 +95,30 @@ class orden
         }
     }
 
+    public static function getOrdenPlaca($clave = null)
+    {
+        try {
+            if ($clave) {
+                $comando = "SELECT * from ".self::NOMBRE_TABLA." WHERE ".self::AUTO_PLACA." =?";
+                // Preparar sentencia
+                $sentencia = ConexionBD::obtenerInstancia()->obtenerBD()->prepare($comando);
+                $sentencia->bindParam(1,$clave);
+            }
+            // Ejecutar sentencia preparada
+            if ($sentencia->execute()) {
+                http_response_code(200);
+                $respuesta[self::NOMBRE_TABLA] = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+                $respuesta['estado'] = Constantes::CODIGO_EXITO;
+                $respuesta['mensaje'] = utf8_encode("Recursos Obtenidos");
+                return $respuesta;
+            } else
+                throw new ExcepcionApi(Constantes::ESTADO_ERROR, "Se ha producido un error");
+
+        } catch (PDOException $e) {
+            throw new ExcepcionApi(Constantes::ESTADO_ERROR_BD, $e->getMessage());
+        }
+    }
+
     public static function transaccionarOrden($datos = null)
     {
         /**

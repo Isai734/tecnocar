@@ -205,7 +205,7 @@ class GPeople
         }
     }
 
-    private function getIdPersona($rfc)
+    private static function getIdPersona($rfc)
     {
 
         try {

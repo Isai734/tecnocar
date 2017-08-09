@@ -52,8 +52,12 @@ include '../../utilidades/ExcepcionApi.php';
 
 
 </head>
+<script src="../../vista/style/js/validaciones.js"></script>
 <script src="../../vista/style/sweet/sweetalert.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../../vista/style/sweet/sweetalert.css">
+<!-- Scripts y styleshet-->
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,700,500,900' rel='stylesheet' type='text/css'>
+
 <body>
 
 <br>
@@ -77,11 +81,11 @@ include '../../utilidades/ExcepcionApi.php';
     </form>
 
     <br>
-    <!-- Tabla de clientes placa, marca, modelo, color, anio, transmision, cliente_clave-->
+    <!--Tabla de autos-->
     <div class="table-responsive">
         <table class="order-table table table-striped" id="tabla">
             <thead>
-            <tr class="info">
+            <tr style="background-color: #00796B; color: white;">
                 <th>Placa</th>
                 <th>Marca</th>
                 <th>Modelo</th>
@@ -91,10 +95,10 @@ include '../../utilidades/ExcepcionApi.php';
                 <th>Cliente</th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
-
             <?php
             $datos = auto::getAuto(null)[auto::NOMBRE_TABLA];
             foreach ($datos as $res) {
@@ -109,8 +113,8 @@ include '../../utilidades/ExcepcionApi.php';
                             <td>' . $nombre . '</td>';
 
                 echo '		<td><a href="UpdateAuto.php?id=' . $res[auto::PLACA] . '&clave=' . $res[auto::CLIENTE_CLAVE] . '" data-toggle="tooltip" data-placement="top" title="Modificar"><button class="btn btn-warning"> <span class="glyphicon glyphicon-pencil"></span></button></a></td>
-                            <td><a data-toggle="tooltip" data-placement="top" title="Eliminar"><button value="' . $res[auto::PLACA] . '" id="del" onclick="eliminar()" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
-
+                            <td><a href="ver_historial.php?id=' . $res[auto::PLACA] . '&clave=' . $res[auto::CLIENTE_CLAVE] . '" data-toggle="tooltip" data-placement="top" title="Ver Historial"><button id="del" value="' . $res[auto::PLACA] . '" class="btn btn-primary"> <span class="glyphicon glyphicon-list"></span></button></a></td>
+                            <td><a data-toggle="tooltip" data-placement="top" title="Eliminar"><button onclick="eliminar(' . "'" . $res[auto::PLACA] . "'" . ')" id="del" value="' . $res[auto::PLACA] . '" class="btn btn-danger"> <span class="glyphicon glyphicon-remove"></span></button></a></td>
 			    		</tr>';
             }
             ?>
@@ -130,25 +134,29 @@ include '../../utilidades/ExcepcionApi.php';
     });
 
     function eliminar(id) {
-        var ids=document.getElementById("del").value;
-        swal({
-                title: "Esta seguro que desea eliminar el registro?",
-                text: "You will not be able to recover this imaginary file!",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-danger",
-                confirmButtonText: "Aceptar!",
-                cancelButtonText: "Cancelar",
-                closeOnConfirm: false,
-                closeOnCancel: true
-            },
-            function(isConfirm) {
-                if (isConfirm) {
-                    window.location = "CrudAlert.php?id="+ids+"&metodo=delete";
-                } else {
-                    //swal("Cancelled", "Your imaginary file is safe :)", "error");
-                }
-            });
+        try {
+            var ids = document.getElementById("del").value;
+            swal({
+                    title: "Esta seguro que desea eliminar el auto con placa " + id + " ?",
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Aceptar!",
+                    cancelButtonText: "Cancelar",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        window.location = "CrudAlert.php?id=" + id + "&metodo=delete";
+                    } else {
+                        //swal("Cancelled", "Your imaginary file is safe :)", "error");
+                    }
+                });
+        } catch (e) {
+            alert(e);
+        }
     }
 </script>
 

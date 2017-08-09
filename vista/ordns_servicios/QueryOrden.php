@@ -109,7 +109,7 @@ if (isset($_SESSION[login::NOMBRE_TABLA]) | !empty($_SESSION[login::NOMBRE_TABLA
                     <th>Placa</th>
                     <th>Marca</th>
                     <th>Modelo</th>
-                    <th>Nombre</th>
+                    <th>Mecanico Asignado</th>
                     <th>Mano Obra</th>
                     <th>Total</th>
                     <th>Estatus</th>
